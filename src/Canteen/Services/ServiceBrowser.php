@@ -129,7 +129,7 @@ namespace Canteen\Services
 				// if there's a call parse that
 				if ($callAlias = ifsetor($this->_uri['call'])) 
 				{
-					$service = $this->service($serviceName);
+					$service = new $serviceName;
 					
 					$callName = URIUtils::uriToMethodCall($callAlias);					
 					$numParams = 0;
@@ -295,6 +295,9 @@ namespace Canteen\Services
 			
 			foreach($methods as $method)
 			{
+				// Remove all inherited methods
+				if ($method->class != $serviceName) continue;
+
 				// For services ignore constructor, static and protected
 				if ($method->isConstructor() 
 					|| $method->isStatic() 
