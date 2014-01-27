@@ -1,0 +1,33 @@
+{
+    "name": "canteen/service-browser",
+	"description" : "Web debugging interface for browsing and testing Services within the CanteenFramework.",
+	"version" : "1.0.0",
+    "type": "library",
+	"keywords": ["browser", "services", "debugging"],
+    "license": "MIT",
+	"homepage" : "http://github.com/Canteen/CanteenServiceBrowser",
+	"time": "2013-10-12",
+	"authors": [
+        {
+            "name": "Matt Karl",
+            "email": "matt@mattkarl.com",
+            "homepage": "http://github.com/bigtimebuddy",
+            "role": "Developer"
+        }
+	],
+	"autoload": {
+        "psr-0": {"Canteen": "src/"}
+    },
+	"require": {
+		"php": ">=5.4.0",
+		"canteen/html5" : "~1.0",
+		"canteen/parser" : "~1.0"
+	},
+	"minimum-stability": "dev",
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/Canteen/CanteenServiceBrowser"
+		}
+	]
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Canteen Service Browser</title>
+		<link rel="stylesheet" src="http://normalize-css.googlecode.com/svn/trunk/normalize.css" />
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<style>
+			body, h1, h2, ul { margin:0; padding:0; }
+			#frame {
+				font-family:Helvetica, sans-serif;
+				font-size:14px;
+				line-height:1.4em;
+				padding:20px;
+				min-width:790px;
+			}
+			.prompt, legend {
+				color:#c00
+			}
+			.text {
+				font-size:16px;
+				padding:5px;
+				border:1px solid #bbb;
+				border-top-width:2px;
+				width:80%;
+				margin-bottom:5px;
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+			}
+			.optional {
+				background-color:#eee;
+			}
+			label {
+				float:left;
+				display:block;
+				width:20%;
+				padding-top:4px;
+				color:#999;
+				font-size:16px;
+			}
+			fieldset {
+				border:1px solid #ccc;
+				padding:20px;
+			}
+			.submit {
+				font-size:16px;
+				padding:5px 10px;
+				border:1px solid #069;
+				background-color:#09f;
+				color:#fff;
+			}
+			.submit:hover {
+				background-color:#069;
+			}
+			.formButtons {
+				padding:10px;
+				text-align:center;
+			}
+			div.exception {
+				background-color:#ffc;
+				padding:10px;
+				border:1px solid #cc9;
+				margin:10px 0 0;
+			}
+			div.exception ol {
+				font-family:Courier, monospace;
+				font-size:80%;
+			}
+			a {
+				color:#09f;
+			}
+			a:hover {
+				text-decoration:none;
+				color:#069;
+			}
+			#serviceLists {
+				width:25%;
+				float:left;
+			}
+			#outputArea {
+				width:75%;
+				float:left;
+			}
+			h1 {
+				padding-bottom:10px;
+				margin-bottom:20px;
+				border-bottom:1px solid #ccc;
+			}
+			h2 {
+				margin-bottom:10px;
+			}
+			#serviceLists ul {
+				margin:0 5px 10px 30px;
+			}
+			a.internal {
+				color:#999;
+			}
+		</style>
+		<script>
+			$(function(){
+				$("input.text").focus(function(e){
+					$(this).removeClass("error");
+				});
+				$("#formInputs").submit(function(e){			
+					// Ignore
+					e.preventDefault();	
+					var args = new Array();
+					var action = $(this).attr('action');
+
+					$("input.text").each(function(i){
+						$(this).removeClass("error");
+						var arg = $(this).val().trim();
+						if (!arg){
+							$(this).addClass("error");
+						} else {
+							if (/^\[[^\]]*\]$/.test(arg))
+							{
+								// The argument is an array, keep commas
+								// and encode each element
+								arg = arg.substr(1, arg.length - 2).split(',');
+								for(i = 0; i < arg.length; i++)
+								{
+									arg[i] = encodeURIComponent(arg[i].trim());
+								}
+								args.push(arg.join(','));
+							}
+							else
+							{
+								// Encode and add as an argument
+								args.push(encodeURIComponent(arg));
+							}
+						}
+					});
+
+					if (args.length < $("input.required").size()){
+						alert("Highlighted fields are required!");
+					} else {
+						$("input.text").attr("disabled", "disabled");
+						document.location.href = action + '/' + args.join('/');
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="frame">
+			<h1>Canteen Service Browser</h1>
+			<div id="serviceLists">
+				{{services}}
+				{{methods}}
+			</div>
+			<div id="outputArea">
+				{{output}}
+			</div>
+		</div>
+		{{logger}}
+	</body>
+</html>
