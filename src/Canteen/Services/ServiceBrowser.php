@@ -249,7 +249,7 @@ namespace Canteen\Services
 			{
 				$t = trim($t);
 				if (!$t) continue;
-				$stack[] = str_replace(self::$rootPath, '', $t);
+				$stack[] = $t;
 			}
 			return $stack;
 		}
