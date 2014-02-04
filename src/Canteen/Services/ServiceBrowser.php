@@ -39,10 +39,10 @@ namespace Canteen\Services
 		
 		/** 
 		*  The collection of all service aliases, Canteen and Custom
-		*  @property {Array} _aliases
+		*  @property {Array} _services
 		*  @private
 		*/
-		private $_aliases;
+		private $_services;
 		
 		/** 
 		*  The uri for this browser
@@ -82,25 +82,13 @@ namespace Canteen\Services
 		/**
 		*  Constructor
 		*/
-		public function __construct(array $aliases, $basePath, $browserUri, $uriRequest, Parser $parser=null)
+		public function __construct(array $services, $basePath, $browserUri, $uriRequest, Parser $parser=null)
 		{
-			$this->_aliases = $aliases;
+			$this->_services = $services;
 			$this->_parser = $parser ? $parser : new Parser();
 			$this->_browserUri = $browserUri;
 			$this->_uriRequest = $uriRequest;
 			$this->_basePath = $basePath;
-		}
-
-		/**
-		*  Get a service name by an alias
-		*  @method getServiceNameByAlias
-		*  @param {String} The alias
-		*  @return {String} The name of the Service class
-		*/
-		private function getServiceNameByAlias($alias)
-		{
-			$aliases = array_merge($this->_aliases, $this->_builtInAliases);
-			return ifsetor($aliases[$alias]);
 		}
 		
 		/**
@@ -121,16 +109,15 @@ namespace Canteen\Services
 			
 			if ($serviceAlias = ifsetor($this->_uri['service']))
 			{
-				$serviceName = $this->getServiceNameByAlias($serviceAlias);
+				$service = ifsetor($this->_services[$serviceAlias]);
+				$serviceName = get_class($service);
 				$args = ifsetor($this->_uri['args']);
 				
 				$argsName = $this->displayArgs($args);
 				
 				// if there's a call parse that
 				if ($callAlias = ifsetor($this->_uri['call'])) 
-				{
-					$service = new $serviceName;
-					
+				{					
 					$callName = URIUtils::uriToMethodCall($callAlias);					
 					$numParams = 0;
 
@@ -322,11 +309,11 @@ namespace Canteen\Services
 		{
 			// Generate the services
 			$ul = html('ul');
-			if ($this->_aliases)
+			if ($this->_services)
 			{
-				foreach ($this->_aliases as $alias=>$className)
+				foreach ($this->_services as $alias=>$classObject)
 				{
-					$link = html('a', $this->simpleName($className));
+					$link = html('a', $this->simpleName(get_class($classObject)));
 					$link->href = $this->_basePath . $this->_browserUri.'/'.$alias;
 					if (in_array($alias, $this->_builtInAliases))
 					{
