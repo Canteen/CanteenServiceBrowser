@@ -1,7 +1,7 @@
 {
     "name": "canteen/service-browser",
 	"description" : "Web debugging interface for browsing and testing Services within the CanteenFramework.",
-	"version" : "1.0.0",
+	"version" : "1.0.1",
     "type": "library",
 	"keywords": ["browser", "services", "debugging"],
     "license": "MIT",
