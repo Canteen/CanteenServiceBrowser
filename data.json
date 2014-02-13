@@ -1,0 +1,404 @@
+{
+    "project": {
+        "name": "Canteen Service Browser",
+        "description": "Web debugging interface for browsing and testing Services within the CanteenFramework.",
+        "version": "1.0.1",
+        "logo": ""
+    },
+    "files": {
+        "src/ServiceBrowser.php": {
+            "name": "src/ServiceBrowser.php",
+            "modules": {
+                "Canteen\\ServiceBrowser": 1
+            },
+            "classes": {
+                "ServiceBrowser": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/URIUtils.php": {
+            "name": "src/URIUtils.php",
+            "modules": {},
+            "classes": {
+                "URIUtils": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "Canteen\\ServiceBrowser": {
+            "name": "Canteen\\ServiceBrowser",
+            "submodules": {},
+            "classes": {
+                "ServiceBrowser": 1,
+                "URIUtils": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/URIUtils.php",
+            "line": 8
+        }
+    },
+    "classes": {
+        "ServiceBrowser": {
+            "name": "ServiceBrowser",
+            "shortname": "ServiceBrowser",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Canteen\\ServiceBrowser",
+            "namespace": "",
+            "file": "src/ServiceBrowser.php",
+            "line": 14,
+            "description": "Web debugging interface for browsing and testing Services within the CanteenFramework.\nLocated in the namespace __Canteen\\ServiceBrowser\\ServiceBrowser__.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "aliases",
+                    "description": "The collection of custom service aliases to class names",
+                    "type": "Dictionary"
+                },
+                {
+                    "name": "basePath",
+                    "description": "The full path to the base site path",
+                    "type": "String"
+                },
+                {
+                    "name": "browserUri",
+                    "description": "The URI stub for the browser",
+                    "type": "String"
+                },
+                {
+                    "name": "uriRequest",
+                    "description": "The full URI requested on the site",
+                    "type": "String"
+                },
+                {
+                    "name": "parser",
+                    "description": "Reference to the Canteen Parser",
+                    "type": "Parser",
+                    "optional": true,
+                    "optdefault": "null"
+                }
+            ]
+        },
+        "URIUtils": {
+            "name": "URIUtils",
+            "shortname": "URIUtils",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Canteen\\ServiceBrowser",
+            "namespace": "",
+            "file": "src/URIUtils.php",
+            "line": 8,
+            "description": "Utility function for handling the URI request strings"
+        }
+    },
+    "classitems": [
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 27,
+            "description": "These are the services built into Canteen",
+            "itemtype": "property",
+            "name": "_builtInAliases",
+            "type": "Array",
+            "access": "private",
+            "tagname": "",
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 39,
+            "description": "The collection of all service aliases, Canteen and Custom",
+            "itemtype": "property",
+            "name": "_services",
+            "type": "Array",
+            "access": "private",
+            "tagname": "",
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 46,
+            "description": "The uri for this browser",
+            "itemtype": "property",
+            "name": "_browserUri",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 53,
+            "description": "The Site's basePath",
+            "itemtype": "property",
+            "name": "_basePath",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 60,
+            "description": "The full browser URI path",
+            "itemtype": "property",
+            "name": "_uriRequest",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 67,
+            "description": "The full browser URI as pieces",
+            "itemtype": "property",
+            "name": "_uri",
+            "type": "Array",
+            "access": "private",
+            "tagname": "",
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 74,
+            "description": "Reference to the parser",
+            "itemtype": "property",
+            "name": "_parser",
+            "type": "Parser",
+            "access": "private",
+            "tagname": "",
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 81,
+            "description": "Constructor",
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 93,
+            "description": "Create the browser request",
+            "itemtype": "method",
+            "name": "handle",
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 204,
+            "description": "Call the method and get the result",
+            "itemtype": "method",
+            "name": "callMethod",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "call",
+                    "description": "The user function to call",
+                    "type": "String|Array"
+                },
+                {
+                    "name": "args",
+                    "description": "The optional arguments to pass to the user function",
+                    "type": "Array",
+                    "optional": true,
+                    "optdefault": "null"
+                }
+            ],
+            "return": {
+                "description": "The HTML result of the call or stack trace",
+                "type": "String"
+            },
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 235,
+            "description": "A utility function to formatted the exception stack trace",
+            "itemtype": "method",
+            "name": "getFormattedTrace",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "The exception to convert to trace",
+                    "type": "Exception"
+                }
+            ],
+            "return": {
+                "description": "The collection of arrays",
+                "type": "Array"
+            },
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 256,
+            "description": "The name of the class",
+            "itemtype": "method",
+            "name": "getMethodsList",
+            "access": "private",
+            "tagname": "",
+            "return": {
+                "description": "HTML mark-up for methods lis",
+                "type": "String"
+            },
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 301,
+            "description": "Get a list of services",
+            "itemtype": "method",
+            "name": "getServicesList",
+            "access": "private",
+            "tagname": "",
+            "return": {
+                "description": "HTML list of services",
+                "type": "String"
+            },
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 327,
+            "description": "Get the name of the class only",
+            "itemtype": "method",
+            "name": "simpleName",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "className",
+                    "description": "The full name of the class with namespace",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The last class name",
+                "type": "String"
+            },
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/ServiceBrowser.php",
+            "line": 339,
+            "description": "Display the arguments as a string",
+            "itemtype": "method",
+            "name": "displayArgs",
+            "params": [
+                {
+                    "name": "args",
+                    "description": "The arguments array",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "The string representation of the arguments, comma-separated",
+                "type": "String"
+            },
+            "class": "ServiceBrowser",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/URIUtils.php",
+            "line": 14,
+            "description": "Process the URI as an array with different pieces",
+            "itemtype": "method",
+            "name": "processURI",
+            "static": 1,
+            "params": [
+                {
+                    "name": "uriRequest",
+                    "description": "The URI request being made",
+                    "type": "String"
+                },
+                {
+                    "name": "ignore",
+                    "description": "The number of elements to exclude from the beginning",
+                    "type": "Int"
+                }
+            ],
+            "return": {
+                "description": "The URI request where each stub is an element",
+                "type": "Array"
+            },
+            "class": "URIUtils",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/URIUtils.php",
+            "line": 73,
+            "description": "Convert a uri (eg. get-all-users) to method call (e.g. getAllUsers)",
+            "itemtype": "method",
+            "name": "uriToMethodCall",
+            "static": 1,
+            "params": [
+                {
+                    "name": "uri",
+                    "description": "The input uri (lowercase, hyphen separated)",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The method call name (lower, camel-cased)",
+                "type": "String"
+            },
+            "class": "URIUtils",
+            "module": "Canteen\\ServiceBrowser"
+        },
+        {
+            "file": "src/URIUtils.php",
+            "line": 95,
+            "description": "Convert a method call (getAllUsers) to a URI stub (get-all-users)",
+            "itemtype": "method",
+            "name": "methodCallToUri",
+            "static": 1,
+            "params": [
+                {
+                    "name": "methodCall",
+                    "description": "The name of the method",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The method call as a URI stub",
+                "type": "String"
+            },
+            "class": "URIUtils",
+            "module": "Canteen\\ServiceBrowser"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "Missing item type\nConstructor",
+            "line": " src/ServiceBrowser.php:81"
+        }
+    ]
+}
