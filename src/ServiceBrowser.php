@@ -1,11 +1,10 @@
 <?php
 
 /**
-*  @module Canteen\Services
+*  @module Canteen\ServiceBrowser
 */
-namespace Canteen\Services
+namespace Canteen\ServiceBrowser
 {
-	use Canteen\Utilities\URIUtils;
 	use Canteen\Parser\Parser;
 	use Canteen\Logger\Logger;
 	use Canteen\HTML5\SimpleList;
@@ -14,7 +13,7 @@ namespace Canteen\Services
 	
 	/**
 	*  Web debugging interface for browsing and testing Services within the CanteenFramework.
-	*  Located in the namespace __Canteen\Services\ServiceBrowser__.
+	*  Located in the namespace __Canteen\ServiceBrowser\ServiceBrowser__.
 	*  @class ServiceBrowser
 	*  @constructor
 	*  @param {Dictionary} aliases The collection of custom service aliases to class names

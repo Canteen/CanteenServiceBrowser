@@ -1,9 +1,9 @@
 <?php
 
 /**
-*  @module Canteen\Utilities
+*  @module Canteen\ServiceBrowser
 */
-namespace Canteen\Utilities
+namespace Canteen\ServiceBrowser
 {
 	/**
 	*  Utility function for handling the URI request strings
