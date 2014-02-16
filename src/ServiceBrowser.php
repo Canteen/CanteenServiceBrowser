@@ -58,18 +58,18 @@ namespace Canteen\ServiceBrowser
 		private $_basePath;
 
 		/** 
-		*  The full browser URI path
-		*  @property {String} _uriRequest
+		*  The alias for the service
+		*  @property {String} _serviceAlias
 		*  @private
 		*/
-		private $_uriRequest;
-		
+		private $_serviceAlias;
+
 		/** 
-		*  The full browser URI as pieces
-		*  @property {Array} _uri 
+		*  The alias for the service method
+		*  @property {String} _callAlias
 		*  @private
 		*/
-		private $_uri;
+		private $_callAlias;
 
 		/** 
 		*  Reference to the parser
@@ -81,12 +81,13 @@ namespace Canteen\ServiceBrowser
 		/**
 		*  Constructor
 		*/
-		public function __construct(array $services, $basePath, $browserUri, $uriRequest, Parser $parser=null)
+		public function __construct(array $services, $basePath, $browserUri, $serviceAlias='', $callAlias='', Parser $parser=null)
 		{
 			$this->_services = $services;
 			$this->_parser = $parser ? $parser : new Parser();
 			$this->_browserUri = $browserUri;
-			$this->_uriRequest = $uriRequest;
+			$this->_serviceAlias = $serviceAlias;
+			$this->_callAlias = $callAlias;
 			$this->_basePath = $basePath;
 		}
 		
@@ -95,43 +96,40 @@ namespace Canteen\ServiceBrowser
 		*  @method handle
 		*/
 		public function handle()
-		{
-			$this->_uri = URIUtils::processURI(
-				$this->_uriRequest, 
-				count(explode('/', $this->_browserUri))
-			);
-			
+		{			
 			// Generate the output, if any
 			$output = '';
-			$serviceName = '';
-			$serviceAlias = '';
+			$serviceClass = '';
+
+			$serviceAlias = $this->_serviceAlias;
+			$callAlias = $this->_callAlias;
 			
-			if ($serviceAlias = ifsetor($this->_uri['service']))
+			if ($serviceAlias)
 			{
 				$service = ifsetor($this->_services[$serviceAlias]);
-				$serviceName = get_class($service);
-				$args = ifsetor($this->_uri['args']);
+				$serviceClass = get_class($service);
+				$args = ifsetor($_POST['args']);
 				
 				$argsName = $this->displayArgs($args);
 				
 				// if there's a call parse that
-				if ($callAlias = ifsetor($this->_uri['call'])) 
+				if ($callAlias) 
 				{					
 					$callName = URIUtils::uriToMethodCall($callAlias);					
 					$numParams = 0;
 
 					if (!method_exists($service, $callName))
 					{
-						$output .= html('span.prompt', 'No service call matching '.$callName);
+						$output .= html('span.prompt', 'No service call matching '.html('strong', $callName));
 					}
 					else
 					{
-						$reflector = new ReflectionClass($serviceName);
+						$reflector = new ReflectionClass($serviceClass);
 						$parameters = $reflector->getMethod($callName)->getParameters();
 						$numParams = count($parameters);
 						$numRequiredParams = $numParams;
 						
-						$output .= html('h2', $serviceName.'.'.$callName.'('.$argsName.')');
+						$output .= html('h2', $serviceClass.'.'.$callName.'('.$argsName.')');
 						
 						if ($numParams && !$args && $numParams != $args)
 						{
@@ -155,7 +153,7 @@ namespace Canteen\ServiceBrowser
 									'type' => $inputType,
 									'id' => 'serviceInput'.$i,
 									'class' => 'text '.$className,
-									'name' => 'arguments[]',
+									'name' => 'args[]',
 									'value' => ifsetor($default, '')								
 								]);
 								$inputs .= $input . html('br'); 
@@ -169,7 +167,7 @@ namespace Canteen\ServiceBrowser
 							]);
 							
 							$action = $this->_basePath . $this->_browserUri.'/'.$serviceAlias.'/'.$callAlias;
-							$output .= html('form#formInputs method=get action='.$action, $fieldset);
+							$output .= html('form#formInputs method=post action='.$action, $fieldset);
 						
 							// If the function has defaults for all params,
 							// we'll show the form AND the default output
@@ -189,7 +187,7 @@ namespace Canteen\ServiceBrowser
 			$data = [
 				'output' => $output,
 				'services' => $this->getServicesList(),
-				'methods' => $this->getMethodsList($serviceName, $serviceAlias),
+				'methods' => $this->getMethodsList($serviceClass),
 				'logger' => ''
 			];
 
@@ -257,16 +255,17 @@ namespace Canteen\ServiceBrowser
 		*  The name of the class
 		*  @method getMethodsList
 		*  @private
+		*  @param {String} serviceClass The name of the service class
 		*  @return {String} HTML mark-up for methods lis
 		*/
-		private function getMethodsList($serviceName, $serviceAlias)
+		private function getMethodsList($serviceClass)
 		{
 			$res = '';
 			
-			if (!$serviceName) return $res;
+			if (!$serviceClass) return $res;
 			
 			// Get the list of methods
-			$reflector = new ReflectionClass($serviceName);
+			$reflector = new ReflectionClass($serviceClass);
 			$methods = $reflector->getMethods();
 			
 			// Sort the methods alphabetically by name
@@ -282,7 +281,7 @@ namespace Canteen\ServiceBrowser
 			foreach($methods as $method)
 			{
 				// Remove all inherited methods
-				if ($method->class != $serviceName) continue;
+				if ($method->class != $serviceClass) continue;
 
 				// For services ignore constructor, static and protected
 				if ($method->isConstructor() 
@@ -292,10 +291,10 @@ namespace Canteen\ServiceBrowser
 					|| substr($method->name, 0, 2) == '__') continue;
 				
 				$link = html('a', $method->name);
-				$link->href = $this->_basePath . $this->_browserUri.'/'.$serviceAlias.'/'.URIUtils::methodCallToUri($method->name);				
+				$link->href = $this->_basePath . $this->_browserUri.'/'.$this->_serviceAlias.'/'.URIUtils::methodCallToUri($method->name);				
 				$ul->addChild(html('li', $link));	
 			}
-			return html('h2', $this->simpleName($serviceName)) . $ul;
+			return html('h2', $this->simpleName($serviceClass)) . $ul;
 		}
 		
 		/**

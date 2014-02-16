@@ -3,7 +3,7 @@
 	<head>
 		<title>Canteen Service Browser</title>
 		<link rel="stylesheet" src="http://normalize-css.googlecode.com/svn/trunk/normalize.css" />
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<style>
 			body, h1, h2, ul { margin:0; padding:0; }
 			#frame {
@@ -26,6 +26,10 @@
 				-webkit-box-sizing: border-box;
 				-moz-box-sizing: border-box;
 				box-sizing: border-box;
+			}
+			.text.error {
+				background-color:#fcc;
+				border-color:#900;
 			}
 			.optional {
 				background-color:#eee;
@@ -98,45 +102,25 @@
 		</style>
 		<script>
 			$(function(){
-				$("input.text").focus(function(e){
-					$(this).removeClass("error");
-				});
-				$("#formInputs").submit(function(e){			
-					// Ignore
-					e.preventDefault();	
-					var args = new Array();
-					var action = $(this).attr('action');
 
-					$("input.text").each(function(i){
-						$(this).removeClass("error");
-						var arg = $(this).val().trim();
-						if (!arg){
-							$(this).addClass("error");
-						} else {
-							if (/^\[[^\]]*\]$/.test(arg))
-							{
-								// The argument is an array, keep commas
-								// and encode each element
-								arg = arg.substr(1, arg.length - 2).split(',');
-								for(i = 0; i < arg.length; i++)
-								{
-									arg[i] = encodeURIComponent(arg[i].trim());
-								}
-								args.push(arg.join(','));
-							}
-							else
-							{
-								// Encode and add as an argument
-								args.push(encodeURIComponent(arg));
-							}
-						}
-					});
+				$("#formInputs").submit(function(e){
 
-					if (args.length < $("input.required").size()){
-						alert("Highlighted fields are required!");
-					} else {
-						$("input.text").attr("disabled", "disabled");
-						document.location.href = action + '/' + args.join('/');
+					// Get all required items in the form
+					var required = $(this).find("input.text")
+						.removeClass('error');
+
+					// Add filter to required element without data
+					var errors = required.filter(function(){
+						return !this.value;
+					}).addClass('error');
+
+					// If there are errors
+					if (errors.length > 0)
+					{
+						errors.on('click focus keydown', function(){
+							$(this).removeClass("error").off('keydown');
+						});
+						e.preventDefault();
 					}
 				});
 			});
