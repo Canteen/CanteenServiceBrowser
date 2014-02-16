@@ -148,7 +148,8 @@ namespace Canteen\ServiceBrowser
 									$className = 'optional';
 								}
 								$inputType = $param->getName() == 'password' ? 'password' : 'text';
-								$inputs .= html('label', $param->getName(), 'for:serviceInput'.$i);
+								$label = preg_replace('/([a-z])([A-Z])/', '$1 $2', $param->getName());
+								$inputs .= html('label', ucfirst($label), 'for:serviceInput'.$i);
 								$input = html('input', [
 									'type' => $inputType,
 									'id' => 'serviceInput'.$i,
@@ -156,7 +157,7 @@ namespace Canteen\ServiceBrowser
 									'name' => 'args[]',
 									'value' => ifsetor($default, '')								
 								]);
-								$inputs .= $input . html('br'); 
+								$inputs .= $input; 
 								$i++;
 							}
 							
@@ -309,6 +310,8 @@ namespace Canteen\ServiceBrowser
 			$ul = html('ul');
 			if ($this->_services)
 			{
+				krsort($this->_services);
+				
 				foreach ($this->_services as $alias=>$classObject)
 				{
 					$link = html('a', $this->simpleName(get_class($classObject)));
@@ -316,8 +319,12 @@ namespace Canteen\ServiceBrowser
 					if (in_array($alias, $this->_builtInAliases))
 					{
 						$link->class = 'internal';
+						$ul->addChild(html('li', $link));
 					}
-					$ul->addChild(html('li', $link));
+					else
+					{
+						$ul->addChildAt(html('li', $link), 0);
+					}
 				}
 			}
 			return $ul;

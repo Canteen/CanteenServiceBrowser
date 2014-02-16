@@ -2,30 +2,95 @@
 <html>
 	<head>
 		<title>Canteen Service Browser</title>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" src="http://normalize-css.googlecode.com/svn/trunk/normalize.css" />
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<style>
 			body, h1, h2, ul { margin:0; padding:0; }
-			#frame {
+			body {
+				background-color:#e6e6e6;
 				font-family:Helvetica, sans-serif;
-				font-size:14px;
+				color:#666;
 				line-height:1.4em;
-				padding:20px;
-				min-width:790px;
-			}
-			.prompt, legend {
-				color:#c00
-			}
-			.text {
 				font-size:16px;
-				padding:5px;
-				border:1px solid #bbb;
-				border-top-width:2px;
-				width:80%;
-				margin-bottom:5px;
+			}
+			.frame {
+				font-family:"Open Sans", Helvetica, sans-serif;
+				line-height:1.4em;
+				position:relative;
+				margin:20px auto;
+				padding:20px 30px;
+				min-width:400px;
+				max-width:800px;
+				border-radius:10px;
+				background-color:#fff;
+				border-bottom:2px solid #c3c3c3;
+			}
+			h1 {
+				letter-spacing: -0.05em;
+				font-weight:300;
+				font-size:200%;
+				padding:30px;
+				text-align:center;
+				margin:0 0 30px;
+				color:#fff;
+				border-radius:8px;
+				border-bottom:2px solid #ccc;
+				border-color:#751700;
+				background: #cc3300;
+				background: -moz-linear-gradient(top,  #cc3300 0%, #a02500 100%);
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cc3300), color-stop(100%,#a02500));
+				background: -webkit-linear-gradient(top,  #cc3300 0%,#a02500 100%);
+				background: -o-linear-gradient(top,  #cc3300 0%,#a02500 100%);
+				background: -ms-linear-gradient(top,  #cc3300 0%,#a02500 100%);
+				background: linear-gradient(to bottom,  #cc3300 0%,#a02500 100%);
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc3300', endColorstr='#a02500',GradientType=0 );
+				text-shadow: 2px 2px #770F0F;
+			}
+
+			h2 {
+				font-weight:300;
+				color:#333;
+				margin-bottom:20px;
+			}
+			
+			.prompt, legend {
+				color:#c00;
+				margin-bottom:20px;
+			}
+
+			.text {
+				display:inline-block;
+				width:75%;
 				-webkit-box-sizing: border-box;
 				-moz-box-sizing: border-box;
 				box-sizing: border-box;
+				-webkit-appearance: none;
+				-moz-appearance:none;
+				appearance:none;
+				outline:none;
+				border:1px solid #ccc;
+				padding:8px;
+				font-size:16px;
+				border-radius:4px;
+				background-color:#fff;
+				color:#333;
+			}
+			.submit {
+				font-size:110%;
+				padding:8px 50px;
+				cursor:pointer;
+				background-color:#888;
+				color:#fff !important;
+				border:1px solid #555;
+				border-bottom-width:2px;
+				text-decoration:none;
+				margin:0 2px;
+				border-radius:25px;
+			}
+			.submit:hover {
+				border-color:#751700;
+				background: #a02500;
 			}
 			.text.error {
 				background-color:#fcc;
@@ -35,26 +100,15 @@
 				background-color:#eee;
 			}
 			label {
-				float:left;
-				display:block;
-				width:20%;
+				display:inline-block;
+				width:25%;
 				padding-top:4px;
 				color:#999;
-				font-size:16px;
+				font-size:14px;
 			}
 			fieldset {
-				border:1px solid #ccc;
-				padding:20px;
-			}
-			.submit {
-				font-size:16px;
-				padding:5px 10px;
-				border:1px solid #069;
-				background-color:#09f;
-				color:#fff;
-			}
-			.submit:hover {
-				background-color:#069;
+				border:0;
+				padding:0;
 			}
 			.formButtons {
 				padding:10px;
@@ -77,27 +131,91 @@
 				text-decoration:none;
 				color:#069;
 			}
-			#serviceLists {
-				width:25%;
-				float:left;
+			.serviceLists {
+				width:220px;
+				float: left;
+				overflow:hidden;
 			}
-			#outputArea {
-				width:75%;
-				float:left;
+			.outputArea {
+				margin-left:220px;
+				overflow:hidden;
 			}
-			h1 {
-				padding-bottom:10px;
-				margin-bottom:20px;
-				border-bottom:1px solid #ccc;
+			.outputArea pre {
+				background-color: #F7F7F7;
+				border: 1px solid #ddd;
+				padding: 10px;
+				font-size: 12px;
+				line-height: 1.4;
+				overflow: scroll;
 			}
-			h2 {
-				margin-bottom:10px;
-			}
-			#serviceLists ul {
-				margin:0 5px 10px 30px;
+			.serviceLists ul {
+				font-size:14px;
+				margin:0 5px 20px 30px;
 			}
 			a.internal {
 				color:#999;
+			}
+
+			.clearfix:before, .serviceLists ul:before,
+			.clearfix:after, .serviceLists ul:after {
+			    content: " "; /* 1 */
+			    display: table; /* 2 */
+			}
+
+			.clearfix:after, .serviceLists ul:after {
+			    clear: both;
+			}
+			.clearfix, .serviceLists ul {
+			    *zoom: 1;
+			}
+
+			/** For 0px - 599px */
+			@media all and (max-width : 599px) {
+				.frame {
+					margin:0;
+					min-width:auto;
+					border-radius:0;
+					border:0;
+					padding:0;
+				}
+				h1 {
+					border-radius:0;
+					font-size:160%;
+					padding:20px;
+					margin-bottom:10px;
+				}
+				h2 {
+					font-size:140%;
+				}
+				body {
+					padding:0;
+					background:#fff;
+				}
+				.serviceLists {
+					width:auto;
+					position:static;
+					overflow:auto;
+					padding:10px;
+				}
+				.serviceLists li {
+					float:left;
+					width:50%;
+				}
+				.outputArea {
+					margin-left:auto;
+					overflow:auto;
+					padding:10px;
+				}
+
+				.text {
+					display:block;
+					width:100%;
+				}
+				label {
+					display:block;
+					width:auto;
+					font-size:14px;
+				}
 			}
 		</style>
 		<script>
@@ -127,13 +245,14 @@
 		</script>
 	</head>
 	<body>
-		<div id="frame">
+		<div class="clearfix frame">
 			<h1>Canteen Service Browser</h1>
-			<div id="serviceLists">
-				{{services}}
+			<div class="serviceLists">
 				{{methods}}
+				<h2>Services</h2>
+				{{services}}
 			</div>
-			<div id="outputArea">
+			<div class="outputArea">
 				{{output}}
 			</div>
 		</div>
