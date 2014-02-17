@@ -5,24 +5,22 @@
 */
 namespace Canteen\ServiceBrowser
 {
+	use Canteen\Authorization\Privilege;
+	use Canteen\Utilities\Plugin;
 	use Canteen\Parser\Parser;
 	use Canteen\Logger\Logger;
+	use Canteen\Services\Service;
 	use Canteen\HTML5\SimpleList;
 	use \ReflectionClass;
 	use \Exception;
 	
 	/**
 	*  Web debugging interface for browsing and testing Services within the CanteenFramework.
-	*  Located in the namespace __Canteen\ServiceBrowser\ServiceBrowser__.
+	*  Located in the namespace __Canteen\ServiceBrowser__.
 	*  @class ServiceBrowser
-	*  @constructor
-	*  @param {Dictionary} aliases The collection of custom service aliases to class names
-	*  @param {String} basePath The full path to the base site path
-	*  @param {String} browserUri The URI stub for the browser
-	*  @param {String} uriRequest The full URI requested on the site
-	*  @param {Parser} [parser=null] Reference to the Canteen Parser
+	*  @extends Plugin
 	*/
-	class ServiceBrowser
+	class ServiceBrowser extends Plugin
 	{
 		/** 
 		*  These are the services built into Canteen
@@ -30,10 +28,10 @@ namespace Canteen\ServiceBrowser
 		*  @private
 		*/
 		private $_builtInAliases = [
-			'user',
+			'config',
 			'page',
 			'time',
-			'config'
+			'user'
 		];
 		
 		/** 
@@ -44,20 +42,6 @@ namespace Canteen\ServiceBrowser
 		private $_services;
 		
 		/** 
-		*  The uri for this browser
-		*  @property {String} _browserUri
-		*  @private
-		*/
-		private $_browserUri;
-
-		/** 
-		*  The Site's basePath
-		*  @property {String} _basePath
-		*  @private
-		*/
-		private $_basePath;
-
-		/** 
 		*  The alias for the service
 		*  @property {String} _serviceAlias
 		*  @private
@@ -65,44 +49,45 @@ namespace Canteen\ServiceBrowser
 		private $_serviceAlias;
 
 		/** 
-		*  The alias for the service method
-		*  @property {String} _callAlias
-		*  @private
+		*  The main uri for the browser
+		*  @property {String} BROWSER_URI
+		*  @final
+		*  @static
+		*  @default 'browser'
 		*/
-		private $_callAlias;
-
-		/** 
-		*  Reference to the parser
-		*  @property {Parser} _parser 
-		*  @private
-		*/
-		private $_parser;
+		const BROWSER_URI = 'browser';
 
 		/**
-		*  Constructor
+		*  @method activate
 		*/
-		public function __construct(array $services, $basePath, $browserUri, $serviceAlias='', $callAlias='', Parser $parser=null)
+		public function activate()
 		{
-			$this->_services = $services;
-			$this->_parser = $parser ? $parser : new Parser();
-			$this->_browserUri = $browserUri;
-			$this->_serviceAlias = $serviceAlias;
-			$this->_callAlias = $callAlias;
-			$this->_basePath = $basePath;
+			// Check for admin privilege
+			$isAdmin = ($this->settings->userPrivilege == Privilege::ADMINISTRATOR);
+
+			// Setup the service browser for debug mode if we're running locally
+			// or we are an administrator privilege
+			if (($this->settings->local || $isAdmin) && $this->settings->debug)
+			{
+				$this->_services = Service::getAll();
+				$this->site->route(
+					'/'.self::BROWSER_URI.'(/@service:[a-zA-Z0-9\-]+(/@call:[a-zA-Z0-9\-]+))/',
+					[$this, 'handle']
+				);
+			}
 		}
 		
 		/**
 		*  Create the browser request
 		*  @method handle
 		*/
-		public function handle()
+		public function handle($serviceAlias=null, $callAlias=null)
 		{			
 			// Generate the output, if any
 			$output = '';
 			$serviceClass = '';
 
-			$serviceAlias = $this->_serviceAlias;
-			$callAlias = $this->_callAlias;
+			$this->_serviceAlias = $serviceAlias;
 			
 			if ($serviceAlias)
 			{
@@ -167,7 +152,7 @@ namespace Canteen\ServiceBrowser
 								html('div.formButtons', html('input.submit type=submit value="Call Service"'))
 							]);
 							
-							$action = $this->_basePath . $this->_browserUri.'/'.$serviceAlias.'/'.$callAlias;
+							$action = $this->settings->basePath . self::BROWSER_URI.'/'.$serviceAlias.'/'.$callAlias;
 							$output .= html('form#formInputs method=post action='.$action, $fieldset);
 						
 							// If the function has defaults for all params,
@@ -197,7 +182,7 @@ namespace Canteen\ServiceBrowser
 				$data['logger'] = (string)Logger::instance()->render();
 			}
 			
-			return $this->_parser->parseFile(__DIR__.'/ServiceBrowser.html', $data);
+			echo $this->parser->parseFile(__DIR__.'/ServiceBrowser.html', $data);
 		}
 		
 		/**
@@ -292,7 +277,7 @@ namespace Canteen\ServiceBrowser
 					|| substr($method->name, 0, 2) == '__') continue;
 				
 				$link = html('a', $method->name);
-				$link->href = $this->_basePath . $this->_browserUri.'/'.$this->_serviceAlias.'/'.URIUtils::methodCallToUri($method->name);				
+				$link->href = $this->settings->basePath . self::BROWSER_URI.'/'.$this->_serviceAlias.'/'.URIUtils::methodCallToUri($method->name);				
 				$ul->addChild(html('li', $link));	
 			}
 			return html('h2', $this->simpleName($serviceClass)) . $ul;
@@ -315,7 +300,7 @@ namespace Canteen\ServiceBrowser
 				foreach ($this->_services as $alias=>$classObject)
 				{
 					$link = html('a', $this->simpleName(get_class($classObject)));
-					$link->href = $this->_basePath . $this->_browserUri.'/'.$alias;
+					$link->href = $this->settings->basePath . self::BROWSER_URI.'/'.$alias;
 					if (in_array($alias, $this->_builtInAliases))
 					{
 						$link->class = 'internal';
